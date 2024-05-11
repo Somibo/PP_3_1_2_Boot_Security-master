@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin page</title>
+
+    <h1>This is admin page </h1>
+</head>
+
+<body>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Фамилия</th>
+        <th scope="col">Email</th>
+        <th scope="col">Role</th>
+    </tr>
+    </thead>
+
+
+    <div th:each="user : ${users}">
+        <tr>
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getFirstName()}"></td>
+            <td th:text="${user.getLastName()}"></td>
+            <td th:text="${user.getEmail()}"></td>
+            <td th:each="role : ${user.getRoles()}" th:text="${role.getRoleName()}"></td>
+            <td>
+                <form th:method="GET" th:action="@{/admin/edit/{id}(id=${user.getId()})}">
+                    <input type="submit" value="Edit"/>
+                </form>
+            <td>
+                <form th:method="DELETE" th:action="@{/admin/delete/{id}(id=${user.getId()})}">
+                    <input type="submit" value="Delete"/>
+                </form>
+            </td>
+        </tr>
+
+    </div>
+</table>
+<br>
+<hr>
+<a th:href="@{/admin/new}">Create new user</a>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<form th:method="POST" th:action="@{/logout}">
+    <input type="submit" value="Logout"/>
+</form>
+</body>
+</html>

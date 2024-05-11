@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Info</title>
+</head>
+<body>
+<h1>Welcome, <span th:text="${user.getFirstName()}"></span>!</h1>
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Email</th>
+    </tr>
+    <tr>
+        <td th:text="${user.getFirstName()}"></td>
+        <td th:text="${user.getLastName()}"></td>
+        <td th:text="${user.getEmail()}"></td>
+    </tr>
+</table>
+
+<br>
+<br>
+
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout"/>
+</form>
+</body>
+</html>
