@@ -7,27 +7,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.repositories.UserRepository;
-
-import java.security.Principal;
-import java.util.NoSuchElementException;
+import ru.kata.spring.boot_security.demo.services.UserService;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/user")
     public String showUserInfo(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        User user = userService.findByEmail(username);
         model.addAttribute("user", user);
         return "user/user";
     }

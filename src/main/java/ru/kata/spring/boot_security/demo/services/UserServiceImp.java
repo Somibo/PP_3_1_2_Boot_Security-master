@@ -7,24 +7,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.DAO.UserDao;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
 public class UserServiceImp implements UserService, UserDetailsService {
-    private final UserRepository userRepository;
+    private final UserDao userDao;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserServiceImp(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
+    public UserServiceImp(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userDao = userDao;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username)
+        User user = userDao.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
@@ -35,22 +36,28 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     @Override
     public List<User> findAll() {
-        return userRepository.findAll();
+        return userDao.findAll();
     }
 
     @Override
     public void delete(Long id) {
-        userRepository.deleteById(id);
+        userDao.deleteById(id);
     }
 
     @Override
     public void save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        userDao.save(user);
     }
 
     @Override
     public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userDao.findById(id).orElse(null);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
     }
 }
