@@ -17,10 +17,16 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        TypedQuery<User> query = entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class);
+        TypedQuery<User> query = entityManager.createQuery(
+                "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = :email", User.class);
         query.setParameter("email", email);
-        return query.getResultStream().findFirst();
+        List<User> users = query.getResultList();
+        if (users.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(users.get(0));
     }
+
 
     @Override
     public List<User> findAll() {
