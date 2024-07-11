@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.DAO.UserDao;
+import ru.kata.spring.boot_security.demo.dao.UserDao;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

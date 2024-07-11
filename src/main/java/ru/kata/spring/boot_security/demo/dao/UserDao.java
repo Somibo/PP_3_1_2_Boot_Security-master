@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.DAO;
+package ru.kata.spring.boot_security.demo.dao;
 
 import ru.kata.spring.boot_security.demo.models.User;
 
@@ -11,4 +11,5 @@ public interface UserDao {
     void deleteById(Long id);
     void save(User user);
     Optional<User> findById(Long id);
+    void update(User user);
 }

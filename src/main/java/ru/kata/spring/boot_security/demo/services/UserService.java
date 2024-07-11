@@ -13,4 +13,5 @@ public interface UserService{
         void save(User user);
         User findById(Long id);
         User findByEmail(String email);
+        void updateUser(User user);
     }

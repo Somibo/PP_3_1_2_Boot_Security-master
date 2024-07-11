@@ -1,17 +1,18 @@
-package ru.kata.spring.boot_security.demo.DAO;
+package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -26,7 +27,6 @@ public class UserDaoImpl implements UserDao {
         }
         return Optional.of(users.get(0));
     }
-
 
     @Override
     public List<User> findAll() {
@@ -46,11 +46,26 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public void save(User user) {
-        if (user.getId() == null) {
-            entityManager.persist(user);
-        } else {
-            entityManager.merge(user);
+        if (user.getId() != null) {
+            // Проверяем, существует ли пользователь с указанным id
+            User existingUser = entityManager.find(User.class, user.getId());
+            if (existingUser != null) {
+                throw new IllegalArgumentException("User with ID " + user.getId() + " already exists.");
+            }
         }
+        entityManager.persist(user); // если пользователь не существует
+    }
+
+    @Override
+    @Transactional
+    public void update(User user) {
+        // Проверяем, существует ли пользователь с указанным id
+        User existingUser = entityManager.find(User.class, user.getId());
+        if (existingUser == null) {
+            throw new IllegalArgumentException("User with ID " + user.getId() + " not found.");
+        }
+
+        entityManager.merge(user); // обновляем пользователя
     }
 
     @Override

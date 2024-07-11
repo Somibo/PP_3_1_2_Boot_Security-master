@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -25,25 +24,17 @@
     <label for="password">Введите пароль</label>
     <input type="password" th:field="*{password}" id="password"/>
     <br/>
-    <p>
-        <label>Select role:
-            <input type="checkbox" name="roles"
-                   th:each="role : ${roles}"
-                   th:text="${role.getRoleName()}"
-                   th:value="${role.getId()}"
-                   th:field="*{roles}"
-            />
-        </label>
-    </p>
+
+    <label>
+        <input type="checkbox" th:field="*{admin}" /> Сделать администратором
+    </label>
     <br/>
+
     <input type="submit" value="Edit!"/>
 </form>
-<br/>
+
 <br/>
 <a href="/admin/users">Back</a>
-<br/>
-<br/>
-<br/>
 <br/>
 <form th:method="POST" th:action="@{/logout}">
     <input type="submit" value="Logout"/>
